@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LoveDove - Admin Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background: #f5f5f5; }
+        .likes { background: #ffcccc; }
+        .mutual { background: #ccffcc; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>LoveDove Admin Panel 💕</h1>
+    <button onclick="loadMatrix()">Load Interest Matrix</button>
+    <div id="matrix"></div>
+
+    <script>
+        async function loadMatrix() {
+            const response = await fetch('/admin/matrix');
+            const data = await response.json();
+            displayMatrix(data);
+        }
+
+        function displayMatrix(data) {
+            const users = data.users;
+            const user_ids = data.user_ids;
+            const matrix = data.matrix;
+            
+            let html = '<table><tr><th>From \\ To</th>';
+            users.forEach((user, i) => html += `<th><a href="/user/${user_ids[i]}">${user}</a></th>`);
+            html += '</tr>';
+            
+            users.forEach((fromUser, i) => {
+                html += `<tr><th><a href="/user/${user_ids[i]}">${fromUser}</a></th>`;
+                users.forEach((toUser, j) => {
+                    const likes = matrix[i][j];
+                    const mutual = likes && matrix[j][i];
+                    const className = mutual ? 'mutual' : (likes ? 'likes' : '');
+                    const symbol = mutual ? '💕' : (likes ? '❤️' : '');
+                    html += `<td class="${className}">${symbol}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</table>';
+            
+            document.getElementById('matrix').innerHTML = html;
+        }
+    </script>
+</body>
+</html>

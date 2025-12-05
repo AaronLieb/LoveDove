@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LoveDove - Register</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 50px auto; }
+        .form { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        input { width: 100%; padding: 8px; margin: 5px 0; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; }
+        .message { padding: 10px; margin: 10px 0; background: #f8f9fa; }
+        a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>LoveDove 💕</h1>
+    
+    <div class="form">
+        <h3>Register</h3>
+        <input type="text" id="regFirst" placeholder="First Name">
+        <input type="text" id="regLast" placeholder="Last Name">
+        <input type="password" id="regPassword" placeholder="Password">
+        <input type="email" id="regEmail" placeholder="Email (optional)">
+        <button onclick="register()">Register</button>
+    </div>
+    
+    <p><a href="/">Already have an account? Express interest here</a></p>
+    
+    <div id="messages"></div>
+
+    <footer style="margin-top: 50px; text-align: center; color: #666;">
+        <a href="/admin">Admin Panel</a>
+    </footer>
+
+    <script>
+        async function register() {
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    firstname: document.getElementById('regFirst').value,
+                    lastname: document.getElementById('regLast').value,
+                    password: document.getElementById('regPassword').value,
+                    email: document.getElementById('regEmail').value || null
+                })
+            });
+            const result = await response.json();
+            if (response.ok) {
+                showMessage(result.message || 'Registration successful!');
+            } else {
+                showMessage(result.detail || 'Registration failed');
+            }
+        }
+
+        function showMessage(msg) {
+            const div = document.createElement('div');
+            div.className = 'message';
+            div.textContent = msg;
+            document.getElementById('messages').appendChild(div);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LoveDove</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 50px auto; }
+        .form { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        input { width: 100%; padding: 8px; margin: 5px 0; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; }
+        .message { padding: 10px; margin: 10px 0; background: #f8f9fa; }
+        a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>LoveDove 💕</h1>
+    
+    <div class="form">
+        <h3>Express Interest</h3>
+        <input type="text" id="userFirst" placeholder="Your First Name">
+        <input type="text" id="userLast" placeholder="Your Last Name">
+        <input type="password" id="userPassword" placeholder="Your Password">
+        <input type="text" id="crushFirst" placeholder="Crush First Name">
+        <input type="text" id="crushLast" placeholder="Crush Last Name">
+        <button onclick="expressInterest()">Express Interest</button>
+    </div>
+    
+    <p><a href="/register">Don't have an account? Register here</a></p>
+    
+    <div id="messages"></div>
+
+    <footer style="margin-top: 50px; text-align: center; color: #666;">
+        <a href="/admin">Admin Panel</a>
+    </footer>
+
+    <script>
+        async function expressInterest() {
+            const response = await fetch('/interest', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    firstname: document.getElementById('userFirst').value,
+                    lastname: document.getElementById('userLast').value,
+                    password: document.getElementById('userPassword').value,
+                    target_firstname: document.getElementById('crushFirst').value,
+                    target_lastname: document.getElementById('crushLast').value
+                })
+            });
+            const result = await response.json();
+            showMessage(result.message);
+        }
+
+        function showMessage(msg) {
+            const div = document.createElement('div');
+            div.className = 'message';
+            div.textContent = msg;
+            document.getElementById('messages').appendChild(div);
+        }
+    </script>
+</body>
+</html>

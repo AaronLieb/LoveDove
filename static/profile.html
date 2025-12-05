@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LoveDove - User Profile</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; }
+        .profile { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        .form { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        input, textarea { width: 100%; padding: 8px; margin: 5px 0; }
+        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; }
+        .message { padding: 10px; margin: 10px 0; background: #f8f9fa; }
+        a { color: #007bff; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <h1>LoveDove 💕</h1>
+    
+    <div class="profile">
+        <h2 id="userName">Loading...</h2>
+        <p><strong>Description:</strong></p>
+        <p id="userDescription">No description set</p>
+    </div>
+    
+    <div class="form">
+        <h3>Update Description</h3>
+        <input type="password" id="password" placeholder="Your Password">
+        <textarea id="description" placeholder="Enter your description" rows="4"></textarea>
+        <button onclick="updateDescription()">Update Description</button>
+    </div>
+    
+    <p><a href="/">Back to LoveDove</a></p>
+    
+    <div id="messages"></div>
+
+    <script>
+        const userId = window.location.pathname.split('/')[2];
+        
+        async function loadProfile() {
+            try {
+                const response = await fetch(`/api/user/${userId}`);
+                if (response.ok) {
+                    const user = await response.json();
+                    document.getElementById('userName').textContent = `${user.firstname} ${user.lastname}`;
+                    document.getElementById('userDescription').textContent = user.description || 'No description set';
+                    document.getElementById('description').value = user.description || '';
+                } else {
+                    showMessage('User not found');
+                }
+            } catch (error) {
+                showMessage('Error loading profile');
+            }
+        }
+
+        async function updateDescription() {
+            const response = await fetch(`/api/user/${userId}/description`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    password: document.getElementById('password').value,
+                    description: document.getElementById('description').value
+                })
+            });
+            const result = await response.json();
+            if (response.ok) {
+                showMessage(result.message);
+                loadProfile(); // Reload to show updated description
+            } else {
+                showMessage(result.detail || 'Update failed');
+            }
+        }
+
+        function showMessage(msg) {
+            const div = document.createElement('div');
+            div.className = 'message';
+            div.textContent = msg;
+            document.getElementById('messages').appendChild(div);
+        }
+
+        // Load profile on page load
+        loadProfile();
+    </script>
+</body>
+</html>

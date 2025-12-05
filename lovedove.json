@@ -1,0 +1,20 @@
+{
+  "users": {
+    "b7aea05ac84d296afc2f35daec1541dda23ec7466ea0544d19270877e2a2c41a": {
+      "firstname": "Aaron",
+      "lastname": "Lieberman",
+      "password": "pass",
+      "description": "hello!"
+    },
+    "9779469589f956f434b70b578302dcbaa084a5eabb0124ccd61b0ae58c596e70": {
+      "firstname": "Tracy",
+      "lastname": "Tux",
+      "password": "pass"
+    }
+  },
+  "interests": {
+    "b7aea05ac84d296afc2f35daec1541dda23ec7466ea0544d19270877e2a2c41a": [
+      "9779469589f956f434b70b578302dcbaa084a5eabb0124ccd61b0ae58c596e70"
+    ]
+  }
+}
